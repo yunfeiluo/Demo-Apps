@@ -20,8 +20,8 @@ def main():
             f = wave.open('voice.wav','rb')
             params = f.getparams()
             nchannels, sampwidth, framerate, nframes = params[:4]
-            strData = f.readframes(nframes)#读取音频，字符串格式
-            waveData = np.fromstring(strData,dtype=np.int16)#将字符串转化为int
+            strData = f.readframes(nframes)#read audio. Type: String
+            waveData = np.fromstring(strData,dtype=np.int16)#String to int
             
             #bpm detect
             #data, fs = bd.read_wav('voice.wav')
@@ -48,8 +48,8 @@ def main():
             print(bpm)
             params = f.getparams()
             nchannels, sampwidth, framerate, nframes = params[:4]
-            strData = f.readframes(nframes)#读取音频，字符串格式
-            waveData = np.fromstring(strData,dtype=np.int16)#将字符串转化为int
+            strData = f.readframes(nframes)#read audio as string
+            waveData = np.fromstring(strData,dtype=np.int16)#String to int
 
         elif (command == 'random generate'):
             music.random_generate()
