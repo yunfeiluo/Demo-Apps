@@ -81,18 +81,18 @@ def pitch_detection():
     f = wave.open('voice.wav', 'rb')
     params = f.getparams()
     nchannels, sampwidth, framerate, nframes = params[:4]
-    strData = f.readframes(nframes)#读取音频，字符串格式
-    waveData = np.fromstring(strData,dtype=np.int16)#将字符串转化为int
-    #waveData = waveData*1.0/(max(abs(waveData)))#wave幅值归一化
+    strData = f.readframes(nframes)#Read audio as String
+    waveData = np.fromstring(strData,dtype=np.int16)#String to int
+    #waveData = waveData*1.0/(max(abs(waveData)))
     framerate = f.getframerate()
     
-    #每半秒一分析
+    #Analysis per half second
     pitches = []
     amount = 0
     while (amount < len(waveData)):
-        #傅里叶变换
+        #Fourier transform
         fly = np.fft.fft(waveData[amount : amount + 22050])
-        #提取基频（分贝最大频率）
+        #Get the fundamental frequency（the frequency with the largest power）
         freqs = np.fft.fftfreq(len(fly))
         idx = np.argmax(np.abs(fly))
         freq = freqs[idx]
@@ -217,13 +217,13 @@ def generate_Main(bpm):
                 else:
                     sound += sound2
         
-        #左手低音
+        #Lower-level keys
         beats += rand_beat
-        if (beats % beats_for_one == 0): #刚好在根音点上
+        if (beats % beats_for_one == 0): #right on the root point
             genYin = 0
-            if (key > 51):  #如果音太高 降三个八度
+            if (key > 51):  #Key too high, decreasing 3 octave
                 genYin = key - 36
-            else:   #正常区间 减两个八度
+            else:   #normal range, decreasing 2 octave
                 genYin = key - 24
             soundg = AudioSegment.from_file('grandPiano' + '\\' + pianoKeys[genYin])
             rand = random.randint(1,2)
@@ -233,13 +233,13 @@ def generate_Main(bpm):
                 low_sound = soundg
             else:
                 low_sound += soundg
-        elif ((beats - 1) % beats_for_one == 0): #下次循环会多一个beat
+        elif ((beats - 1) % beats_for_one == 0): # will have 1 extra beat at next loop step
             silence = AudioSegment.from_file('grandPiano' + '\\' + 'silence.wav')
-            silence = silence[:milisecond_per_beat]  #空
+            silence = silence[:milisecond_per_beat]  #empty
             genYin = 0
-            if (key > 51):  #如果音太高 降三个八度
+            if (key > 51):  #Key too high, decreasing 3 octave
                 genYin = key - 36
-            else:   #正常区间 减两个八度
+            else:   #normal range, decreasing 2 octave
                 genYin = key - 24
             soundg = AudioSegment.from_file('grandPiano' + '\\' + pianoKeys[genYin])
             rand = random.randint(1,2)
@@ -251,9 +251,9 @@ def generate_Main(bpm):
                 low_sound += soundg
         else:
             genYin = 0
-            if (key > 51):  #如果音太高 降三个八度
+            if (key > 51):  #Key too high, decreasing 3 octave
                 genYin = key - 24
-            else:   #正常区间 减两个八度
+            else:   #normal range, decreasing 2 octave
                 genYin = key - 12
             soundg = AudioSegment.from_file('grandPiano' + '\\' + pianoKeys[genYin])
             rand = random.randint(1,2)
