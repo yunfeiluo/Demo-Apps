@@ -52,9 +52,6 @@ class ObjDetectFRCNN:
 
     def draw(self, image, detections, flip=True):
         orig = image.copy()
-        if detections is None:
-            return orig
-        
         if flip:
             orig = cv2.flip(orig, 1)
         # post-process

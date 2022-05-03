@@ -25,13 +25,20 @@ def demo(n_steps=64, hand_detector=None, obj_detector=None, flip=True):
         results = hand_detector.detect(image)
 
         # OBJECT DETECTION
-        detections = obj_detector.detect(image, flip=flip) if obj_detector is not None else None
+        detections = None
+        if obj_detector is not None:
+            detections = obj_detector.detect(image, flip=flip)
 
         # draw the hand skeleton on
         img_w_hand, normal_img = hand_detector.draw(image, results)
         
         # draw the object box on
-        image_w_objs = obj_detector.draw(img_w_hand, detections, flip=flip)
+        if obj_detector is not None:
+            image_w_objs = obj_detector.draw(img_w_hand, detections, flip=flip)
+            # Flip the image horizontally for a selfie-view display.
+            final_img = cv2.flip(image_w_objs, 1) if flip else image_w_objs
+        else:
+            final_img = cv2.flip(img_w_hand, 1) if flip else img_w_hand
 
         # display the hand skeleton in normal space
         if img is None:
@@ -41,8 +48,6 @@ def demo(n_steps=64, hand_detector=None, obj_detector=None, flip=True):
         plt.pause(.1)
         plt.draw()
 
-        # Flip the image horizontally for a selfie-view display.
-        final_img = cv2.flip(image_w_objs, 1) if flip else image_w_objs
         # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         cv2.imshow('MediaPipe Hands', final_img)
 
@@ -59,7 +64,8 @@ def demo(n_steps=64, hand_detector=None, obj_detector=None, flip=True):
     # # For Normalization
     # last_lm = steps[-1]['results'].multi_hand_landmarks[0].landmark
     # dists = dict()
-    # for t in [(0, 1), (1, 2), (2, 3), (3, 4), (0, 5), (5, 6), (6, 7), (7, 8), (0, 17), (17, 18), (18, 19), (19, 20), (17, 13), (13, 14), (14, 15), (15, 16), (13, 9), (9, 10), (10, 11), (11, 12)]:
+    # # for t in [(0, 1), (1, 2), (2, 3), (3, 4), (0, 5), (5, 6), (6, 7), (7, 8), (0, 17), (17, 18), (18, 19), (19, 20), (17, 13), (13, 14), (14, 15), (15, 16), (13, 9), (9, 10), (10, 11), (11, 12)]:
+    # for t in [(0, 1), (1, 2), (2, 3), (3, 4), (0, 5), (5, 6), (6, 7), (7, 8), (5, 9), (9, 10), (10, 11), (11, 12), (9, 13), (13, 14), (14, 15), (15, 16), (13, 17), (17, 18), (18, 19), (19, 20)]:
     #     dists[t] = np.linalg.norm(get_vec(last_lm[t[0]]) - get_vec(last_lm[t[1]]))
     # with open('NORMAL_HAND_SPACE.pkl', 'wb') as f:
     #     pickle.dump(dists, f)
@@ -96,6 +102,6 @@ def demo(n_steps=64, hand_detector=None, obj_detector=None, flip=True):
 if __name__ == '__main__':
     obj_detector = ObjDetectFRCNN()
     hand_detector = HandGesture()
-    steps = demo(n_steps=8, hand_detector=hand_detector, obj_detector=obj_detector) # steps containing image, results for hand gesture, and detection for objects
+    steps = demo(n_steps=128, hand_detector=hand_detector, obj_detector=obj_detector) # steps containing image, results for hand gesture, and detection for objects
     print('Capture success')
     # draw_stream_3d(steps)
