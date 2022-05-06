@@ -1,7 +1,9 @@
 import os
+import sys
 import numpy as np
 import time
 from multiprocessing import Pool
+import subprocess
 
 '''
 Strength of current wifi: /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -I
@@ -14,10 +16,10 @@ WIFI_APS = ["Fei's home_5G", "sangexxx", "keon", "OHarra-WiFi"]
 FINGERPRINTS = {
             "Living room": np.array([0.64, 0.93, 0.517, 0.65]),
             "Yunfei's Bedroom": np.array([0.927, 0.597, 0.377, 0.76]),
-            # "Xiao Cai's Bedroom": [],
             "Bathroom": np.array([0.667, 0.66, 0.497, 0.407]),
             "Kitchen": np.array([0.457, 0.583, 0.433, 0.29]),
-            "Dining Area": np.array([0.517, 0.72, 0.46, 0.433])
+            "Dining Area": np.array([0.517, 0.72, 0.46, 0.433]),
+            "Xiao Cai's Bedroom": np.array([[0.9166, 0.7018, 0.3434, 0.57]]),
         }
 
 class WifiFingerPrint:
@@ -37,7 +39,10 @@ class WifiFingerPrint:
         print('Collecting', wifi_ap)
         rssis = list()
         for i in range(n):
-            res = os.popen("/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport --scan=\"{}\"".format(wifi_ap)).read()
+            # res = os.popen("/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport --scan=\"{}\"".format(wifi_ap)).read()
+            res = subprocess.check_output("/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport --scan=\"{}\"".format(wifi_ap), shell=True)
+            res = res.decode("utf-8")
+            # print("res", res)
             res = [i for i in res.split() if len(i) > 0]
             ap_names = wifi_ap.split()
             rssi = list()
@@ -46,49 +51,68 @@ class WifiFingerPrint:
                     rssi.append(int(res[i+1]))
             if len(rssi) > 0:
                 rssis.append(rssi[-1])  # max is closest one, min is the farest, 0 is 2.4GHz, 1 is 5GHz
+        # print(rssis)
         return np.mean(rssis) if len(rssis) > 0 else None
-
-    def get_fingerprint(self, n=3):
-        print('Collectin FingerPrints...')
+    
+    def normalize(self, rssi, min_, max_):
+        rssi = max(-90, min(-30, rssi)) # clip into range (-90, -30) (poor, perfect)
+        return ((rssi + 90) / (60)) * (max_ - min_) + min_
+    
+    def retrieve_currect_finger_print(self, n=1):
+        res = dict()
+        for i in range(n):
+            aps = os.popen("/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -s").read()
+            aps = [i for i in aps.split() if len(i) > 0]
+            for j in range(len(aps)):
+                name = aps[j]
+                # special case
+                if aps[j] == 'home_5G':
+                    name = "Fei's home_5G"
+                
+                # regular case
+                if name in self.WIFI_APS:
+                    if res.get(name) is None:
+                        res[name] = [round(self.normalize(int(aps[j+1]), 0, 1), 3)]
+                    else:
+                        res[name].append(round(self.normalize(int(aps[j+1]), 0, 1), 3))
+        for name in res:
+            res[name] = np.mean(res[name])
+        return res
+    
+    def get_fingerprint(self, n=1):
+        print('Collecting FingerPrints...')
         start = time.time()
-        fingerprint = dict()
 
-        # iterate over pre-set wifi aps
-        for wifi_ap in self.WIFI_APS:
-            rssi = self.get_rssi(wifi_ap, n)
-            # print("{}: {}".format(wifi_ap, rssi))
-
-            # normalize to [0, 1]
-            if rssi is None:
-                rssi = -1
-            else:
-                rssi = round(self.normalize(rssi, 0, 1), 3)
-
-            # set
-            fingerprint[wifi_ap] = rssi
+        fingerprint = self.retrieve_currect_finger_print(n=n)
         
         # end
         end = time.time()
         print('Collecting time {} s'.format(round(end - start, 3)))
-        print(fingerprint)
-        return np.array([fingerprint[r] for r in fingerprint])
-
-    def normalize(self, rssi, min_, max_):
-        rssi = max(-90, min(-30, rssi)) # clip into range (-90, -30) (poor, perfect)
-        return ((rssi + 90) / (60)) * (max_ - min_) + min_
-
-    def scan(self):
-        res = os.popen("/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport --scan=\"XFINITY\"").read()
-        print(res)
+        print("Current Finger Print:", fingerprint)
+        res_fp = list()
+        for r in self.WIFI_APS:
+            res_fp.append(fingerprint[r] if fingerprint.get(r) is not None else -1)
+        print("Formatted FingerPrint", res_fp)
+        return np.array(res_fp)
 
     def get_location(self):
         fingerprint = self.get_fingerprint(n=1)
-        dists = np.matmul(self.fr_matrix, fingerprint)
-        location = self.locations[np.argmax(dists)]
-        print("You are located at", location)
+        inds = [i for i in range(len(fingerprint)) if fingerprint[i] > -1] # filter out missing rssi
+        dists = np.linalg.norm(self.fr_matrix[:, inds] - fingerprint[inds], axis=1, ord=2)
+        # print('Distance', dists)
+        location = self.locations[np.argmin(dists)]
+        print("===============================\n")
+        print("You are located at: {}\n".format(location))
+        print("===============================")
 
 if __name__ == '__main__':
+    command = sys.argv[1]
     locator = WifiFingerPrint(WIFI_APS, FINGERPRINTS)
-    # locator.scan()
-    # fingerprint = locator.get_fingerprint(n=5)
-    locator.get_location()
+
+    if command == "collect":
+        fingerprint = locator.get_fingerprint(n=5)
+    elif command == "locate":
+        locator.get_location()
+    else:
+        print("Unknown Command:", command)
+        exit()
