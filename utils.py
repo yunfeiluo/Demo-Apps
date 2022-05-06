@@ -3,6 +3,7 @@ import pickle
 import cv2
 import matplotlib.pyplot as plt
 import numpy as np
+import sys
 
 def centering(hand_landmarks, center=[0, 0, 0]):
     # center = [hand_landmarks.landmark[0].x, hand_landmarks.landmark[0].y, hand_landmarks.landmark[0].z]

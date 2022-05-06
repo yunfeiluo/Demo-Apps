@@ -35,6 +35,7 @@ class ObjDetectFRCNN:
         if flip:
             image = cv2.flip(image, 1)
         image.flags.writeable = True
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         # Preprocess
         im = image.transpose((2, 0, 1))
         # add the batch dimension, scale the raw pixel intensities to the
