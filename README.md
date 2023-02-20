@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Demo-Apps
 This repository collects the small programs I've made. The application fields varies (e.g. localization, computer vision, and basic computation, etc.). The descriptions of each of these demo applications are presented in the following. They are open source and free to try them out. Any comments or ideas are welcome! Have fun! 
 
@@ -13,3 +14,9 @@ This repository collects the small programs I've made. The application fields va
 - Under folder [fingerprint_localization](https://github.com/yunfeiluo/Demo-Apps/tree/main/fingerprint_localization)
 - Run "python3 -m wifi_fingerprint_localization locate" to see current location  
 - Run "python3 -m wifi_fingerprint_localization collect" to collect fingerprint at current location
+=======
+# HackUmass VI auto_music
+#Created on Oct 2018. Was the team project in the HackUmass VI
+
+#Generating music based on the recorded audio analysis
+>>>>>>> HackUmass-VI-auto_music/master
