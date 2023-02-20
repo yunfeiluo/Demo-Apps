@@ -9,17 +9,22 @@ import subprocess
 Strength of current wifi: /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -I
 List of wifi available: /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -s
 Specific Wifi AP: /System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport --scan="Fei's home_5G"
+
+Bluetooth: system_profiler SPBluetoothDataType
 '''
 
 # Global Vars
 WIFI_APS = ["Fei's home_5G", "sangexxx", "keon", "OHarra-WiFi"]
 FINGERPRINTS = {
-            "Living room": np.array([0.64, 0.93, 0.517, 0.65]),
-            "Yunfei's Bedroom": np.array([0.927, 0.597, 0.377, 0.76]),
-            "Bathroom": np.array([0.667, 0.66, 0.497, 0.407]),
+            "Living room: Center": np.array([0.6364, 0.8815, 0.5217, 0.6134]),
+            "Living room: Green Sofa": np.array([0.6566, 0.8204, 0.54, 0.5466]), 
+            "Living room: Yellow Sofa": np.array([0.6966, 1.0, 0.5233, 0.5666]),
+            "Yunfei's Bedroom: Bed": np.array([0.927, 0.597, 0.377, 0.76]),
+            "Yunfei's Bedroom: Yunfei's Table": np.array([1.0, 0.7533, 0.4283, 0.7364]), 
+            "Bathroom: Toilet": np.array([0.667, 0.66, 0.497, 0.407]),
+            "Bathroom: Dressing Table": np.array([0.7636, 0.6632, 0.4567, 0.43]),
             "Kitchen": np.array([0.457, 0.583, 0.433, 0.29]),
-            "Dining Area": np.array([0.517, 0.72, 0.46, 0.433]),
-            "Xiao Cai's Bedroom": np.array([[0.9166, 0.7018, 0.3434, 0.57]]),
+            "Dining Area": np.array([0.517, 0.72, 0.46, 0.433])
         }
 
 class WifiFingerPrint:
