@@ -1,5 +1,5 @@
 from utils import *
-from obj_detect import *
+# from obj_detect import *
 from hand_gesture import *
 
 # main functions
@@ -102,8 +102,8 @@ def demo(n_steps=64, hand_detector=None, obj_detector=None, flip=True):
 if __name__ == '__main__':
     num = sys.argv[1]
     num = np.inf if num == 'inf' else int(num)
-    obj_detector = ObjDetectFRCNN()
+    # obj_detector = ObjDetectFRCNN()
     hand_detector = HandGesture()
-    steps = demo(n_steps=num, hand_detector=hand_detector, obj_detector=obj_detector) # steps containing image, results for hand gesture, and detection for objects
+    steps = demo(n_steps=num, hand_detector=hand_detector, obj_detector=None) # steps containing image, results for hand gesture, and detection for objects
     print('Capture success')
     # draw_stream_3d(steps)
