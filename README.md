@@ -22,4 +22,5 @@ This repository collects the small programs I've made. The application fields va
 
 ## HackUmass VI auto_music
 - Created on Oct 2018. Was the team project in the HackUmass VI
-- Generating music based on the recorded audio analysis
+- Function(s): Generating music based on the recorded audio analysis
+- Under folder [auto_generative_piano_music](https://github.com/yunfeiluo/Demo-Apps/tree/main/auto_generative_piano_music)
