@@ -1,5 +1,5 @@
 # Demo-Apps
-This repository collects the small programs I've made. The application fields varies (e.g. localization, computer vision, and basic computation, etc.). The descriptions of each of these demo applications are presented in the following. They are open source and free to try them out. Any comments or ideas are wellcome! Have fun! 
+This repository collects the small programs I've made. The application fields varies (e.g. localization, computer vision, and basic computation, etc.). The descriptions of each of these demo applications are presented in the following. They are open source and free to try them out. Any comments or ideas are welcome! Have fun! 
 
 ## Hand Gesture Recognition
 - Made in 2022. Was one of the ideas for the final project of course CS654/690W on the topic of Internet of Things (IoT) at UMass Amherst. 
