@@ -8,6 +8,7 @@ This repository collects the small programs I've made. The application fields va
 - Function(s): Detect hand gestures with one of the current best practices in literature, and project the result in a normalized space. 
 - Under folder [hand_gesture_recognition](https://github.com/yunfeiluo/Demo-Apps/tree/main/hand_gesture_recognition)  
 - Run the code by "python3 -m demo num_frame" where "num_frame" is the total number of frames that will be captured by the camera.  
+- Using [MediaPipe Hands](https://google.github.io/mediapipe/solutions/hands.html) as backbone method. 
 
 ---
 
@@ -24,3 +25,8 @@ This repository collects the small programs I've made. The application fields va
 - Created on Oct 2018. Was the team project in the HackUmass VI
 - Function(s): Generating music based on the recorded audio analysis
 - Under folder [auto_generative_piano_music](https://github.com/yunfeiluo/Demo-Apps/tree/main/auto_generative_piano_music)
+
+## Make Random Choice
+- Help with rolling the Dice
+- Block choosing from same set of items in 4 hours
+- Based on [Gumnbel Trick Sampling](https://arxiv.org/abs/2110.01515#:~:text=The%20Gumbel%2Dmax%20trick%20is,its%20unnormalized%20(log%2D)probabilities.)
