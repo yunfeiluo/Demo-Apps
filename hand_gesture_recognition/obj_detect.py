@@ -17,11 +17,11 @@ class ObjDetectFRCNN:
         self.CONFIDENCE = 0.5
 
         # configuration and checkpoint
-        self.MODELS = {
-            "frcnn-resnet": detection.fasterrcnn_resnet50_fpn,
-            "frcnn-mobilenet": detection.fasterrcnn_mobilenet_v3_large_320_fpn,
-            "retinanet": detection.retinanet_resnet50_fpn
-        }
+        # self.MODELS = {
+        #     "frcnn-resnet": detection.fasterrcnn_resnet50_fpn,
+        #     "frcnn-mobilenet": detection.fasterrcnn_mobilenet_v3_large_320_fpn,
+        #     "retinanet": detection.retinanet_resnet50_fpn
+        # }
         # load the model and set it to evaluation mode
         # model = detection.fasterrcnn_resnet50_fpn(pretrained=True)
         self.model = detection.fasterrcnn_mobilenet_v3_large_320_fpn(pretrained=True)
