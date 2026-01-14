@@ -6,7 +6,6 @@ This repository collects the small programs I've made. The applications' fields 
 ## Cat Similarity
 - Made in May 2023. Calculate similarity between cats/kitties. Find your cat/kitty among the cat population!
 - Leveraging pretrained [Vision Transformer](https://github.com/lukemelas/PyTorch-Pretrained-ViT), followed by calculating cosine similarity between embeddings. (require manually crop of image for best performance).
-- This program was used to assist us when targeting our first kitty! We then have a new family member from [Mirumkitty](https://www.mirumkitty.com/). 
 
 ---
 
